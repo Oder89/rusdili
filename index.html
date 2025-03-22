@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sözün tərcüməsin Tap</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #4CAF50;
+        }
+        p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 80%;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            font-size: 18px;
+            font-weight: bold;
+            color: #d9534f;
+        }
+        #score {
+            font-size: 20px;
+            color: #4CAF50;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Sözün Tərcüməsini Tap</h1>
+        <p id="word"></p>
+        <button class="button" id="answer1" onclick="checkAnswer(1)"></button>
+        <button class="button" id="answer2" onclick="checkAnswer(2)"></button>
+        <p id="result"></p>
+        <p id="score">Xal: 0</p>
+    </div>
+
+    <script>
+        // Sözlər və cavablar
+        const wordsAndAnswers = {
+            "вчера": ["dünən", "bu gün"],
+            "вдруг": ["birdən", "bəzən"],
+            "иногда": ["nadirən", "tez-tez"],
+            "недавно": ["qabaqlar", "günortaçağı"]
+        };
+
+        let score = 0;  // İstifadəçinin xalları
+
+        // Sözləri təsadüfi seçmək
+        function getRandomWord() {
+            const keys = Object.keys(wordsAndAnswers);
+            const randomWord = keys[Math.floor(Math.random() * keys.length)];
+            return { word: randomWord, answers: wordsAndAnswers[randomWord] };
+        }
+
+        // Sualı göstərmək
+        function showQuestion() {
+            const { word, answers } = getRandomWord();
+            const correctAnswer = answers[0];
+            const shuffledAnswers = [...answers];
+            shuffledAnswers.sort(() => Math.random() - 0.5);
+
+            document.getElementById("word").textContent = `Bu sözün mənası nədir? ${word}`;
+            document.getElementById("answer1").textContent = shuffledAnswers[0];
+            document.getElementById("answer2").textContent = shuffledAnswers[1];
+            document.getElementById("result").textContent = "";
+
+            // Funksiya cavab yoxlamaq üçün
+            window.checkAnswer = function(answer) {
+                if (shuffledAnswers[answer - 1] === correctAnswer) {
+                    score += 10;  // Düzgün cavabda xal artır
+                    document.getElementById("result").textContent = "Düzgün cavab!";
+                    document.getElementById("result").style.color = "#4CAF50"; // Yaşıl rəng
+                } else {
+                    document.getElementById("result").textContent = `Səhv cavab! Düzgün cavab: ${correctAnswer}`;
+                    document.getElementById("result").style.color = "#d9534f"; // Qırmızı rəng
+                }
+
+                document.getElementById("score").textContent = `Xal: ${score}`;
+                setTimeout(showQuestion, 2000); // Yeni sualı 2 saniyə sonra göstər
+            };
+        }
+
+        // Sualı ilk dəfə göstərmək
+        showQuestion();
+    </script>
+
+</body>
+</html>
